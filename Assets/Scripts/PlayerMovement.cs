@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
 		{
 			Debug.Log("Player is in Water");
 			LoadMenuScreen();
-		}
+			}
 		if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded())
 		{
 			// Debug.Log("Jumping");
