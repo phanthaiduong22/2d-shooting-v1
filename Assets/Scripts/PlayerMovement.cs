@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour
 	public Transform firePoint;
 	public GameObject deathEffect;
 
+	public HealthBar healthBar;
+
 
 	public float moveSpeed = 0f;
 	float currentMove;
@@ -24,7 +26,8 @@ public class PlayerMovement : MonoBehaviour
 	public float jumpSpeed = 10f;
 	float jumpMove;
 
-	public int health = 100;
+	public int maxHealth = 100;
+	public int currentHealth;
 
 	bool isJumping;
 
@@ -33,12 +36,16 @@ public class PlayerMovement : MonoBehaviour
 	{
 		currentMove = 0;
 		jumpMove = 0;
+		currentHealth = maxHealth;
 
 		animator = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 
 		rigid = GetComponent<Rigidbody2D>();
 		boxCollider2D = transform.GetComponent<BoxCollider2D>();
+
+		// Health Bar
+		healthBar.SetMaxHealth(maxHealth);
 	}
 	// Update is called once per frame
 	void Update()
@@ -46,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
 		if (IsWater())
 		{
 			Debug.Log("Player is in Water");
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+			LoadMenuScreen();
 		}
 		if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded())
 		{
@@ -151,8 +158,9 @@ public class PlayerMovement : MonoBehaviour
 	}
 	public void TakeDamage(int damage)
 	{
-		health -= damage;
-		if (health <= 0)
+		currentHealth -= damage;
+		healthBar.SetHealth(currentHealth);
+		if (currentHealth <= 0)
 		{
 			Die();
 		}
@@ -162,8 +170,15 @@ public class PlayerMovement : MonoBehaviour
 	{
 		Instantiate(deathEffect, transform.position, Quaternion.identity);
 		Destroy(gameObject);
+		LoadMenuScreen();
 	}
 
+
+	void LoadMenuScreen()
+	{
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+
+	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
 		Debug.Log("Enter collider");
