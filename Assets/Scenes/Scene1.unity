@@ -1852,7 +1852,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1.05
+  m_GravityScale: 4
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -1903,8 +1903,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1539632861300792, guid: 96ae8f9dd8fd89941bc4d858375f035b, type: 3}
   firePoint: {fileID: 1070925898}
   deathEffect: {fileID: 1755349173569476, guid: 3c45864be6a059a4a82a25e285298338, type: 3}
-  moveSpeed: 10
-  jumpSpeed: 10
+  moveSpeed: 7
+  jumpSpeed: 20
   health: 100
 --- !u!1 &1977474125
 GameObject:
