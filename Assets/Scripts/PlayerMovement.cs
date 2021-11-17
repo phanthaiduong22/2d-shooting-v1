@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
 	[SerializeField] private LayerMask platformLayerMask;
+	[SerializeField] private LayerMask waterLayerMask;
 
 	// public CharacterController2D controller;
 	public Animator animator;
@@ -41,6 +43,11 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (IsWater())
+		{
+			Debug.Log("Player is in Water");
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+		}
 		if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded())
 		{
 			// Debug.Log("Jumping");
@@ -129,10 +136,16 @@ public class PlayerMovement : MonoBehaviour
 
 	private bool IsGrounded()
 	{
-		// Debug.Log("Player is Grounded");
-
 		float extraHeightText = .5f;
 		RaycastHit2D raycastHit = Physics2D.Raycast(boxCollider2D.bounds.center, Vector2.down, boxCollider2D.bounds.extents.y + extraHeightText, platformLayerMask);
+
+		return raycastHit.collider != null;
+	}
+	private bool IsWater()
+	{
+
+		float extraHeightText = .5f;
+		RaycastHit2D raycastHit = Physics2D.Raycast(boxCollider2D.bounds.center, Vector2.down, boxCollider2D.bounds.extents.y + extraHeightText, waterLayerMask);
 
 		return raycastHit.collider != null;
 	}
