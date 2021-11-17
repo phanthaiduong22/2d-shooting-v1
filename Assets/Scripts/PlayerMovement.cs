@@ -16,13 +16,15 @@ public class PlayerMovement : MonoBehaviour
 	public GameObject deathEffect;
 
 
-	public float moveSpeed = 10f;
+	public float moveSpeed = 0f;
 	float currentMove;
 
-	public float jumpSpeed = 20f;
+	public float jumpSpeed = 10f;
 	float jumpMove;
 
 	public int health = 100;
+
+	bool isJumping;
 
 
 	void Start()
@@ -41,9 +43,12 @@ public class PlayerMovement : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded())
 		{
-			Debug.Log("Jumping");
+			// Debug.Log("Jumping");
 			jumpMove = jumpSpeed;
+			isJumping = true;
 			animator.SetBool("IsJumping", true);
+			// rigid.AddForce(new Vector2(currentMove, jumpMove * 50f));
+
 		}
 		else if (Input.GetKey(KeyCode.LeftArrow))
 		{
@@ -62,7 +67,9 @@ public class PlayerMovement : MonoBehaviour
 
 			// Call animation running
 			if (IsGrounded())
-				animator.SetBool("isRunning", true);
+			{
+				animator.SetBool("IsRunning", true);
+			}
 
 		}
 		else if (Input.GetKey(KeyCode.RightArrow))
@@ -82,22 +89,28 @@ public class PlayerMovement : MonoBehaviour
 
 			// Call animation running
 			if (IsGrounded())
-				animator.SetBool("isRunning", true);
-
+			{
+				animator.SetBool("IsRunning", true);
+			}
 
 		}
 		else if (Input.GetKeyDown(KeyCode.Space))
 		{
 			Debug.Log("Shooting");
 			Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+		}
+		else if (Input.GetKey(KeyCode.DownArrow))
+		{
 			// animator.SetBool("IsCrouching", true);
 		}
 		else
 		{
-
 			currentMove = 0;
-			animator.SetBool("IsJumping", false);
-			animator.SetBool("isRunning", false);
+			if (!isJumping)
+			{
+				animator.SetBool("IsJumping", false);
+			}
+			animator.SetBool("IsRunning", false);
 			animator.SetBool("IsCrouching", false);
 		}
 
@@ -108,9 +121,9 @@ public class PlayerMovement : MonoBehaviour
 	{
 		rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 
+		Debug.Log(currentMove);
 		rigid.velocity = new Vector2(currentMove, rigid.velocity.y + jumpMove);
 		// rigid.AddForce(new Vector2(currentMove, jumpMove * 50f));
-
 		jumpMove = 0;
 	}
 
@@ -140,13 +153,15 @@ public class PlayerMovement : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (collision.transform.tag.Equals("Ground"))
-			Debug.Log("Enter collider");
+		Debug.Log("Enter collider");
+		if (IsGrounded())
+			isJumping = false;
 	}
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
 		Debug.Log("Exit collider");
+		// isJumping = true;
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)

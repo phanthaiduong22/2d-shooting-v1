@@ -10,9 +10,15 @@ public class Enemy : MonoBehaviour
 	float moveSpeed = 0.03f;
 	public GameObject deathEffect;
 	public GameObject impactEffect;
+	SpriteRenderer spriteRenderer;
+
 
 	float currentMove;
-
+	void Start()
+	{
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		spriteRenderer.flipX = true;
+	}
 	void Update()
 	{
 
@@ -22,7 +28,10 @@ public class Enemy : MonoBehaviour
 	void EnemyMove()
 	{
 		if (transform.position.x <= -12f || transform.position.x >= 12f)
+		{
 			moveSpeed = -moveSpeed;
+			spriteRenderer.flipX = !spriteRenderer.flipX;
+		}
 		transform.position = transform.position + new Vector3(moveSpeed, 0f, 0f);
 	}
 	void Die()
