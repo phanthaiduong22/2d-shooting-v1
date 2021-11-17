@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
 	private BoxCollider2D boxCollider2D;
 	public GameObject bulletPrefab;
 	public Transform firePoint;
+	public GameObject deathEffect;
 
 
 	public float moveSpeed = 10f;
@@ -20,6 +21,9 @@ public class PlayerMovement : MonoBehaviour
 
 	public float jumpSpeed = 20f;
 	float jumpMove;
+
+	public int health = 100;
+
 
 	void Start()
 	{
@@ -116,18 +120,22 @@ public class PlayerMovement : MonoBehaviour
 
 		float extraHeightText = .5f;
 		RaycastHit2D raycastHit = Physics2D.Raycast(boxCollider2D.bounds.center, Vector2.down, boxCollider2D.bounds.extents.y + extraHeightText, platformLayerMask);
-		Color rayColor;
-		if (raycastHit.collider != null)
-		{
-			rayColor = Color.green;
-		}
-		else
-		{
-			rayColor = Color.red;
-		}
-		Debug.DrawRay(boxCollider2D.bounds.center, Vector2.down * (boxCollider2D.bounds.extents.y + extraHeightText), rayColor);
 
 		return raycastHit.collider != null;
+	}
+	public void TakeDamage(int damage)
+	{
+		health -= damage;
+		if (health <= 0)
+		{
+			Die();
+		}
+	}
+
+	void Die()
+	{
+		Instantiate(deathEffect, transform.position, Quaternion.identity);
+		Destroy(gameObject);
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)

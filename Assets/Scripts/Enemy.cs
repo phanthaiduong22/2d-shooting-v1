@@ -2,26 +2,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour
+{
 
-	public int health = 100;
-
+	public int health = 300;
+	public int damage = 40;
+	float moveSpeed = 0.03f;
 	public GameObject deathEffect;
+	public GameObject impactEffect;
 
-	public void TakeDamage (int damage)
+	float currentMove;
+
+	void Update()
 	{
-		health -= damage;
 
-		if (health <= 0)
-		{
-			Die();
-		}
+		EnemyMove();
+
 	}
-
-	void Die ()
+	void EnemyMove()
+	{
+		if (transform.position.x <= -12f || transform.position.x >= 12f)
+			moveSpeed = -moveSpeed;
+		transform.position = transform.position + new Vector3(moveSpeed, 0f, 0f);
+	}
+	void Die()
 	{
 		Instantiate(deathEffect, transform.position, Quaternion.identity);
 		Destroy(gameObject);
 	}
 
+	void OnTriggerEnter2D(Collider2D hitInfo)
+	{
+		Debug.Log("enemy touch player");
+		Debug.Log(hitInfo.name);
+		PlayerMovement playerMovement = hitInfo.GetComponent<PlayerMovement>();
+		if (playerMovement != null)
+		{
+			playerMovement.TakeDamage(damage);
+		}
+
+		Instantiate(impactEffect, transform.position, transform.rotation);
+
+		// Destroy(gameObject);
+	}
+	public void TakeDamage(int damage)
+	{
+		health -= damage;
+		if (health <= 0)
+		{
+			Die();
+		}
+	}
 }
+
