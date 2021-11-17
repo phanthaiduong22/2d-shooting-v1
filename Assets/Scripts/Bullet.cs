@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour {
+public class Bullet : MonoBehaviour
+{
 
 	public float speed = 20f;
 	public int damage = 40;
@@ -10,11 +11,12 @@ public class Bullet : MonoBehaviour {
 	public GameObject impactEffect;
 
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 		rb.velocity = transform.right * speed;
 	}
 
-	void OnTriggerEnter2D (Collider2D hitInfo)
+	void OnTriggerEnter2D(Collider2D hitInfo)
 	{
 		Enemy enemy = hitInfo.GetComponent<Enemy>();
 		if (enemy != null)
@@ -26,5 +28,5 @@ public class Bullet : MonoBehaviour {
 
 		Destroy(gameObject);
 	}
-	
+
 }

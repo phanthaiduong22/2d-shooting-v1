@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
 	Rigidbody2D rigid;
 	SpriteRenderer spriteRenderer;
 	private BoxCollider2D boxCollider2D;
+	public GameObject bulletPrefab;
+	public Transform firePoint;
+
 
 	public float moveSpeed = 10f;
 	float currentMove;
@@ -43,13 +46,19 @@ public class PlayerMovement : MonoBehaviour
 			Debug.Log("Moving Left");
 			currentMove = -moveSpeed;
 
+			// Rotate Fire Point
+			if (spriteRenderer.flipX == false)
+			{
+				firePoint.Rotate(0f, 180f, 0f);
+				firePoint.position = transform.position + new Vector3(-1f, 0.5f, 0f);
+			}
+
 			// Rotate left
 			spriteRenderer.flipX = true;
 
 			// Call animation running
 			if (IsGrounded())
 				animator.SetBool("isRunning", true);
-			// transform.Rotate(0f, 180f, 0f);
 
 		}
 		else if (Input.GetKey(KeyCode.RightArrow))
@@ -57,18 +66,27 @@ public class PlayerMovement : MonoBehaviour
 			Debug.Log("Moving Right");
 			currentMove = moveSpeed;
 
+			// Rotate Fire Point
+			if (spriteRenderer.flipX == true)
+			{
+				firePoint.Rotate(0f, 180f, 0f);
+				firePoint.position = transform.position + new Vector3(1f, 0.5f, 0f);
+			}
+
 			// Rotate left
 			spriteRenderer.flipX = false;
 
 			// Call animation running
 			if (IsGrounded())
 				animator.SetBool("isRunning", true);
-			// transform.Rotate(0f, 180f, 0f);
+
 
 		}
-		else if (Input.GetKey(KeyCode.A))
+		else if (Input.GetKeyDown(KeyCode.Space))
 		{
-			animator.SetBool("IsCrouching", true);
+			Debug.Log("Shooting");
+			Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+			// animator.SetBool("IsCrouching", true);
 		}
 		else
 		{
