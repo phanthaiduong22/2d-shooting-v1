@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D hitInfo)
 	{
-		Debug.Log("enemy touch player");
+		Debug.Log("Enemy touch player");
 		Debug.Log(hitInfo.name);
 		PlayerMovement playerMovement = hitInfo.GetComponent<PlayerMovement>();
 		if (playerMovement != null)
