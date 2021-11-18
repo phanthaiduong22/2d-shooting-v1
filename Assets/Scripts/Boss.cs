@@ -2,39 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Boss : MonoBehaviour
 {
-
-	public int health = 300;
+	public int health = 500;
 	public int damage = 40;
-	float moveSpeed = 0.03f;
-	public float minLeft = -12;
-	public float minRight = 12;
+	public GameObject bulletPrefab;
+	public Transform firePoint;
+	public Transform firePoint1;
 	public GameObject deathEffect;
 	public GameObject impactEffect;
 	SpriteRenderer spriteRenderer;
+	public float fireRate = 10f;
+	private float nextFire = 0.0f;
+
+	private int rotatetimes = 6;
+	private int reverse = 1;
 
 
-	float currentMove;
+	// Start is called before the first frame update
 	void Start()
 	{
-		spriteRenderer = GetComponent<SpriteRenderer>();
-		spriteRenderer.flipX = true;
+		firePoint.Rotate(0f, 0f, -10f);
+		firePoint1.Rotate(0f, 180f, -10f);
 	}
+
+	// Update is called once per frame
 	void Update()
 	{
-
-		EnemyMove();
-
-	}
-	void EnemyMove()
-	{
-		if (transform.position.x <= minLeft * 1f || transform.position.x >= minRight * 1f)
+		if (Time.time > nextFire)
 		{
-			moveSpeed = -moveSpeed;
-			spriteRenderer.flipX = !spriteRenderer.flipX;
+			if (!bulletPrefab)
+				return;
+			nextFire = Time.time + fireRate;
+			Shooting();
 		}
-		transform.position = transform.position + new Vector3(moveSpeed, 0f, 0f);
+	}
+	void Shooting()
+	{
+		if (rotatetimes <= 0)
+		{
+			reverse = -reverse;
+			rotatetimes = 10;
+		}
+		firePoint.Rotate(0f, 0f, reverse * 10f);
+		Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+		firePoint1.Rotate(0f, 0f, reverse * 10f);
+		Instantiate(bulletPrefab, firePoint1.position, firePoint1.rotation);
+		rotatetimes -= 1;
 	}
 	void Die()
 	{
@@ -66,4 +80,3 @@ public class Enemy : MonoBehaviour
 		}
 	}
 }
-

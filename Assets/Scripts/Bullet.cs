@@ -18,6 +18,11 @@ public class Bullet : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D hitInfo)
 	{
+		Boss boss = hitInfo.GetComponent<Boss>();
+		if (boss != null)
+		{
+			boss.TakeDamage(damage);
+		}
 		Enemy enemy = hitInfo.GetComponent<Enemy>();
 		if (enemy != null)
 		{
@@ -28,6 +33,11 @@ public class Bullet : MonoBehaviour
 		if (bird != null)
 		{
 			bird.TakeDamage(damage);
+		}
+		PlayerMovement player = hitInfo.GetComponent<PlayerMovement>();
+		if (player != null)
+		{
+			player.TakeDamage(damage);
 		}
 		Instantiate(impactEffect, transform.position, transform.rotation);
 

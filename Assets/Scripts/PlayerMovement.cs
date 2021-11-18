@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
 	{
 		if (IsWater())
 		{
-			LoadMenuScreen();
+			LoadGameOverScreen();
 		}
 		if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded())
 		{
@@ -182,39 +182,42 @@ public class PlayerMovement : MonoBehaviour
 		}
 	}
 
+	public void MoveDependOnSlide(Vector3 slideTransform)
+	{
+		Debug.Log("transform" + slideTransform);
+
+		// transform.position = slideTransform;
+	}
+
 	void Die()
 	{
 		Instantiate(deathEffect, transform.position, Quaternion.identity);
 		Destroy(gameObject);
-		LoadMenuScreen();
+		LoadGameOverScreen();
 	}
 
 
-	void LoadMenuScreen()
+	void LoadGameOverScreen()
 	{
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+		SceneManager.LoadScene(1);
 
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		Debug.Log("Enter collider");
 		if (IsGrounded())
-        {
-			Debug.Log("Grounded");
+		{
 			isJumping = false;
 		}
-			
+
 	}
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
-		Debug.Log("Exit collider");
 		// isJumping = true;
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		Debug.Log("Enter trigger");
 	}
 
 }
