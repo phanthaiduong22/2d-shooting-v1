@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
 	public GameObject bulletPrefab;
 	public Transform firePoint;
 	public GameObject deathEffect;
+	private CircleCollider2D circleCollider2D;
 
 	public HealthBar healthBar;
 	AudioSource audioSource;
@@ -50,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
 
 		// Get audio
 		audioSource = GetComponent<AudioSource>();
+		circleCollider2D = transform.GetComponent<CircleCollider2D>();
 	}
 	// Update is called once per frame
 	void Update()
@@ -153,7 +155,6 @@ public class PlayerMovement : MonoBehaviour
 	{
 		rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-		Debug.Log(currentMove);
 		rigid.velocity = new Vector2(currentMove, rigid.velocity.y + jumpMove);
 		// rigid.AddForce(new Vector2(currentMove, jumpMove * 50f));
 		jumpMove = 0;
@@ -162,8 +163,8 @@ public class PlayerMovement : MonoBehaviour
 	private bool IsGrounded()
 	{
 		float extraHeightText = .5f;
-		RaycastHit2D raycastHit = Physics2D.Raycast(boxCollider2D.bounds.center, Vector2.down, boxCollider2D.bounds.extents.y + extraHeightText, platformLayerMask);
-
+		//RaycastHit2D raycastHit = Physics2D.Raycast(boxCollider2D.bounds.center, Vector2.down, boxCollider2D.bounds.extents.y + extraHeightText, platformLayerMask);
+		RaycastHit2D raycastHit = Physics2D.CircleCast(circleCollider2D.bounds.center,circleCollider2D.radius, Vector2.down, 0.45f, platformLayerMask);
 		return raycastHit.collider != null;
 	}
 	private bool IsWater()
@@ -201,7 +202,11 @@ public class PlayerMovement : MonoBehaviour
 	{
 		Debug.Log("Enter collider");
 		if (IsGrounded())
+        {
+			Debug.Log("Grounded");
 			isJumping = false;
+		}
+			
 	}
 
 	private void OnCollisionExit2D(Collision2D collision)
