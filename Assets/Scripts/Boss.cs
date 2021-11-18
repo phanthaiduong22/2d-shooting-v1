@@ -44,9 +44,9 @@ public class Boss : MonoBehaviour
 			reverse = -reverse;
 			rotatetimes = 10;
 		}
-		firePoint.Rotate(0f, 0f, reverse * 10f);
+		firePoint.Rotate(0f, 0f, reverse * 15f);
 		Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-		firePoint1.Rotate(0f, 0f, reverse * 10f);
+		firePoint1.Rotate(0f, 0f, reverse * 15f);
 		Instantiate(bulletPrefab, firePoint1.position, firePoint1.rotation);
 		rotatetimes -= 1;
 	}
@@ -58,7 +58,7 @@ public class Boss : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D hitInfo)
 	{
-		Debug.Log("Enemy touch player");
+		Debug.Log("Boss touch player");
 		Debug.Log(hitInfo.name);
 		PlayerMovement playerMovement = hitInfo.GetComponent<PlayerMovement>();
 		if (playerMovement != null)
@@ -67,8 +67,6 @@ public class Boss : MonoBehaviour
 		}
 
 		Instantiate(impactEffect, transform.position, transform.rotation);
-
-		// Destroy(gameObject);
 	}
 	public void TakeDamage(int damage)
 	{

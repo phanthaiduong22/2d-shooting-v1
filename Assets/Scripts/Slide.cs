@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Slide : MonoBehaviour
 {
-	float moveSpeed = 0.03f;
+	float moveSpeed = 0.04f;
 	public float maxLeft;
 	public float maxRight;
 	// Start is called before the first frame update
