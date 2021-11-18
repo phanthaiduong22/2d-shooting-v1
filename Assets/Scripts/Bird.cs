@@ -46,6 +46,7 @@ public class Bird : MonoBehaviour
 	}
 	public void TakeDamage(int damage)
 	{
+		FindObjectOfType<AudioManager>().Play("BulletTouching");
 		health -= damage;
 		if (health <= 0)
 		{

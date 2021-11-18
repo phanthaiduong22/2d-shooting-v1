@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
 	public GameObject deathEffect;
 
 	public HealthBar healthBar;
+	AudioSource audioSource;
 
 
 	public float moveSpeed = 0f;
@@ -28,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
 	public int maxHealth = 100;
 	public int currentHealth;
-
+	bool isMoving = false;
 	bool isJumping;
 
 
@@ -46,27 +47,29 @@ public class PlayerMovement : MonoBehaviour
 
 		// Health Bar
 		healthBar.SetMaxHealth(maxHealth);
+
+		// Get audio
+		audioSource = GetComponent<AudioSource>();
 	}
 	// Update is called once per frame
 	void Update()
 	{
 		if (IsWater())
 		{
-			Debug.Log("Player is in Water");
 			LoadMenuScreen();
-			}
+		}
 		if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded())
 		{
-			// Debug.Log("Jumping");
 			jumpMove = jumpSpeed;
 			isJumping = true;
 			animator.SetBool("IsJumping", true);
 			// rigid.AddForce(new Vector2(currentMove, jumpMove * 50f));
+			FindObjectOfType<AudioManager>().Play("PlayerJumping");
 
 		}
 		else if (Input.GetKey(KeyCode.LeftArrow))
 		{
-			Debug.Log("Moving Left");
+			isMoving = true;
 			currentMove = -moveSpeed;
 
 			// Rotate Fire Point
@@ -85,10 +88,12 @@ public class PlayerMovement : MonoBehaviour
 				animator.SetBool("IsRunning", true);
 			}
 
+			// Play moving sound
+
 		}
 		else if (Input.GetKey(KeyCode.RightArrow))
 		{
-			Debug.Log("Moving Right");
+			isMoving = true;
 			currentMove = moveSpeed;
 
 			// Rotate Fire Point
@@ -112,6 +117,7 @@ public class PlayerMovement : MonoBehaviour
 		{
 			Debug.Log("Shooting");
 			Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+			FindObjectOfType<AudioManager>().Play("PlayerShooting");
 		}
 		else if (Input.GetKey(KeyCode.DownArrow))
 		{
@@ -126,6 +132,18 @@ public class PlayerMovement : MonoBehaviour
 			}
 			animator.SetBool("IsRunning", false);
 			animator.SetBool("IsCrouching", false);
+			isMoving = false;
+		}
+
+		// Sound moving
+		if (isMoving)
+		{
+			if (!audioSource.isPlaying)
+				audioSource.Play();
+		}
+		else
+		{
+			audioSource.Stop();
 		}
 
 
