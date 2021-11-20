@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
 	public GameObject bulletPrefab;
 	public Transform firePoint;
 	public GameObject deathEffect;
+	public Transform groundCheck;
 
 	public HealthBar healthBar;
 	AudioSource audioSource;
@@ -31,6 +33,11 @@ public class PlayerMovement : MonoBehaviour
 	public int currentHealth;
 	bool isMoving = false;
 	bool isJumping;
+	bool jump;
+	bool isGrounded;
+	private Vector3 velocity = Vector3.zero;
+	public UnityEvent landingEvent;
+	bool isShooting = false;
 
 
 	void Start()
@@ -50,6 +57,10 @@ public class PlayerMovement : MonoBehaviour
 
 		// Get audio
 		audioSource = GetComponent<AudioSource>();
+		if (landingEvent == null)
+			landingEvent = new UnityEvent();
+		landingEvent.AddListener(OnLanding);
+		StartCoroutine("Shoot");
 	}
 	// Update is called once per frame
 	void Update()
@@ -58,82 +69,36 @@ public class PlayerMovement : MonoBehaviour
 		{
 			LoadGameOverScreen();
 		}
-		if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded())
-		{
-			jumpMove = jumpSpeed;
-			isJumping = true;
-			animator.SetBool("IsJumping", true);
-			// rigid.AddForce(new Vector2(currentMove, jumpMove * 50f));
-			FindObjectOfType<AudioManager>().Play("PlayerJumping");
 
-		}
-		else if (Input.GetKey(KeyCode.LeftArrow))
+		currentMove = Input.GetAxisRaw("Horizontal") * 40f;
+		if (Mathf.Abs(currentMove) > .01f)
 		{
+			animator.SetBool("IsRunning", true);
 			isMoving = true;
-			currentMove = -moveSpeed;
-
-			// Rotate Fire Point
-			if (spriteRenderer.flipX == false)
-			{
-				firePoint.Rotate(0f, 180f, 0f);
-				firePoint.position = transform.position + new Vector3(-1f, 0.5f, 0f);
-			}
-
-			// Rotate left
-			spriteRenderer.flipX = true;
-
-			// Call animation running
-			if (IsGrounded())
-			{
-				animator.SetBool("IsRunning", true);
-			}
-
-			// Play moving sound
-
-		}
-		else if (Input.GetKey(KeyCode.RightArrow))
-		{
-			isMoving = true;
-			currentMove = moveSpeed;
-
-			// Rotate Fire Point
-			if (spriteRenderer.flipX == true)
-			{
-				firePoint.Rotate(0f, 180f, 0f);
-				firePoint.position = transform.position + new Vector3(1f, 0.5f, 0f);
-			}
-
-			// Rotate left
-			spriteRenderer.flipX = false;
-
-			// Call animation running
-			if (IsGrounded())
-			{
-				animator.SetBool("IsRunning", true);
-			}
-
-		}
-		else if (Input.GetKeyDown(KeyCode.Space))
-		{
-			Debug.Log("Shooting");
-			Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-			FindObjectOfType<AudioManager>().Play("PlayerShooting");
-		}
-		else if (Input.GetKey(KeyCode.DownArrow))
-		{
-			// animator.SetBool("IsCrouching", true);
 		}
 		else
-		{
-			currentMove = 0;
-			if (!isJumping)
-			{
-				animator.SetBool("IsJumping", false);
-			}
+        {
 			animator.SetBool("IsRunning", false);
-			animator.SetBool("IsCrouching", false);
 			isMoving = false;
+        }
+
+		if (Input.GetKeyDown(KeyCode.UpArrow))
+		{
+			animator.SetBool("IsJumping", true);
+			jump = true;
 		}
+
+		if (Input.GetKey(KeyCode.Space))
+		{
+			if (!isShooting)
+            {
+				isShooting = true;
+            }
+		}
+		else
+        {
+			isShooting = false;
+        }
 
 		// Sound moving
 		if (isMoving)
@@ -149,13 +114,45 @@ public class PlayerMovement : MonoBehaviour
 
 	}
 
+	private IEnumerator Shoot()
+    {
+		while (true)
+        { 
+			if (isShooting)
+            {
+				Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+				FindObjectOfType<AudioManager>().Play("PlayerShooting");
+				yield return new WaitForSeconds(.5f);
+			}
+		}
+	}
+
 	private void FixedUpdate()
 	{
-		rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+		/*rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-		rigid.velocity = new Vector2(currentMove, rigid.velocity.y + jumpMove);
+		rigid.velocity = new Vector2(currentMove, rigid.velocity.y + jumpMove);*/
 		// rigid.AddForce(new Vector2(currentMove, jumpMove * 50f));
-		jumpMove = 0;
+		Move(currentMove * Time.fixedDeltaTime, jump);
+		if (jump)
+        {
+			jump = false;
+			return;
+        }
+		jump = false;
+		bool wasGrounded = isGrounded;
+		isGrounded = false;
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, .2f, platformLayerMask);
+		for (int i = 0; i < colliders.Length; i++)
+        {
+			if (colliders[i].gameObject != gameObject)
+            {
+				isGrounded = true;
+				if (!wasGrounded)
+					landingEvent.Invoke();
+            }
+        }
+		//jumpMove = 0;
 	}
 
 	private bool IsGrounded()
@@ -204,12 +201,12 @@ public class PlayerMovement : MonoBehaviour
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (IsGrounded())
-		{
-			isJumping = false;
-		}
+        /*if (IsGrounded())
+        {
+            isJumping = false;
+        }*/
 
-	}
+    }
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
@@ -220,4 +217,33 @@ public class PlayerMovement : MonoBehaviour
 	{
 	}
 
+	public void Move(float move, bool jump)
+    {
+		Vector3 targetVelocity = new Vector2(move * 10f, rigid.velocity.y);
+		rigid.velocity = Vector3.SmoothDamp(rigid.velocity, targetVelocity, ref velocity, .05f);
+		if (move > 0 && spriteRenderer.flipX)
+		{
+			firePoint.Rotate(0f, 180f, 0f);
+			firePoint.position = transform.position + new Vector3(1f, 0.5f, 0f);
+			spriteRenderer.flipX = !spriteRenderer.flipX;
+		}
+		// Otherwise if the input is moving the player left and the player is facing right...
+		else if (move < 0 && !spriteRenderer.flipX)
+		{
+			firePoint.Rotate(0f, 180f, 0f);
+			firePoint.position = transform.position + new Vector3(-1f, 0.5f, 0f);
+			spriteRenderer.flipX = !spriteRenderer.flipX;
+		}
+		if (isGrounded && jump)
+		{
+			isGrounded = false;
+			rigid.AddForce(new Vector2(0f, 1100f));
+			FindObjectOfType<AudioManager>().Play("PlayerJumping");
+		}
+	}
+
+	public void OnLanding()
+	{
+		animator.SetBool("IsJumping", false);
+	}
 }
