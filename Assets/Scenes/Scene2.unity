@@ -1208,25 +1208,9 @@ MonoBehaviour:
   deathEffect: {fileID: 1755349173569476, guid: 3c45864be6a059a4a82a25e285298338, type: 3}
   groundCheck: {fileID: 1473302426}
   healthBar: {fileID: 333599547}
-  moveSpeed: 7
-  jumpSpeed: 20
+  moveSpeed: 10
   maxHealth: 100
   currentHealth: 0
-  landingEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!50 &802401153
 Rigidbody2D:
   serializedVersion: 4

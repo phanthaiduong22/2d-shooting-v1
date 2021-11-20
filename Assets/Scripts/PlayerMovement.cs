@@ -2,48 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
 
 public class PlayerMovement : MonoBehaviour
 {
 	[SerializeField] private LayerMask platformLayerMask;
 	[SerializeField] private LayerMask waterLayerMask;
 
-	// public CharacterController2D controller;
 	public Animator animator;
-	Rigidbody2D rigid;
-	SpriteRenderer spriteRenderer;
-	private BoxCollider2D boxCollider2D;
 	public GameObject bulletPrefab;
 	public Transform firePoint;
 	public GameObject deathEffect;
 	public Transform groundCheck;
-
 	public HealthBar healthBar;
-	AudioSource audioSource;
-
-
-	public float moveSpeed = 0f;
-	float currentMove;
-
-	public float jumpSpeed = 10f;
-	float jumpMove;
-
+	public float moveSpeed = 10f;
 	public int maxHealth = 100;
 	public int currentHealth;
-	bool isMoving = false;
-	bool isJumping;
-	bool jump;
-	bool isGrounded;
+
+	private AudioSource audioSource;
+	private Rigidbody2D rigid;
+	private SpriteRenderer spriteRenderer;
+	private BoxCollider2D boxCollider2D;
+	private float currentMove;
+	private bool isMoving = false;
+	private bool jump;
+	private bool isGrounded;
 	private Vector3 velocity = Vector3.zero;
-	public UnityEvent landingEvent;
-	bool isShooting = false;
+	private bool isShooting = false;
 
 
 	void Start()
 	{
 		currentMove = 0;
-		jumpMove = 0;
 		currentHealth = maxHealth;
 
 		animator = GetComponent<Animator>();
@@ -57,9 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
 		// Get audio
 		audioSource = GetComponent<AudioSource>();
-		if (landingEvent == null)
-			landingEvent = new UnityEvent();
-		landingEvent.AddListener(OnLanding);
+
 		StartCoroutine("Shoot");
 	}
 	// Update is called once per frame
@@ -92,12 +79,14 @@ public class PlayerMovement : MonoBehaviour
 		{
 			if (!isShooting)
             {
+				animator.SetBool("IsShooting", true);
 				isShooting = true;
             }
 		}
 		else
         {
 			isShooting = false;
+			animator.SetBool("IsShooting", false);
         }
 
 		// Sound moving
@@ -117,22 +106,20 @@ public class PlayerMovement : MonoBehaviour
 	private IEnumerator Shoot()
     {
 		while (true)
-        { 
+        {
 			if (isShooting)
-            {
+			{
 				Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 				FindObjectOfType<AudioManager>().Play("PlayerShooting");
-				yield return new WaitForSeconds(.5f);
+				yield return new WaitForSeconds(.4f);
 			}
+			else
+				yield return new WaitForEndOfFrame();
 		}
 	}
 
 	private void FixedUpdate()
 	{
-		/*rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-		rigid.velocity = new Vector2(currentMove, rigid.velocity.y + jumpMove);*/
-		// rigid.AddForce(new Vector2(currentMove, jumpMove * 50f));
 		Move(currentMove * Time.fixedDeltaTime, jump);
 		if (jump)
         {
@@ -149,18 +136,11 @@ public class PlayerMovement : MonoBehaviour
             {
 				isGrounded = true;
 				if (!wasGrounded)
-					landingEvent.Invoke();
+					animator.SetBool("IsJumping", false);
             }
         }
-		//jumpMove = 0;
 	}
 
-	private bool IsGrounded()
-	{
-		float extraHeightText = .5f;
-		RaycastHit2D raycastHit = Physics2D.Raycast(boxCollider2D.bounds.center, Vector2.down, boxCollider2D.bounds.extents.y + extraHeightText, platformLayerMask);
-		return raycastHit.collider != null;
-	}
 	private bool IsWater()
 	{
 
@@ -169,6 +149,7 @@ public class PlayerMovement : MonoBehaviour
 
 		return raycastHit.collider != null;
 	}
+
 	public void TakeDamage(int damage)
 	{
 		currentHealth -= damage;
@@ -217,9 +198,9 @@ public class PlayerMovement : MonoBehaviour
 	{
 	}
 
-	public void Move(float move, bool jump)
+	private void Move(float move, bool jump)
     {
-		Vector3 targetVelocity = new Vector2(move * 10f, rigid.velocity.y);
+		Vector3 targetVelocity = new Vector2(move * moveSpeed, rigid.velocity.y);
 		rigid.velocity = Vector3.SmoothDamp(rigid.velocity, targetVelocity, ref velocity, .05f);
 		if (move > 0 && spriteRenderer.flipX)
 		{
@@ -227,7 +208,6 @@ public class PlayerMovement : MonoBehaviour
 			firePoint.position = transform.position + new Vector3(1f, 0.5f, 0f);
 			spriteRenderer.flipX = !spriteRenderer.flipX;
 		}
-		// Otherwise if the input is moving the player left and the player is facing right...
 		else if (move < 0 && !spriteRenderer.flipX)
 		{
 			firePoint.Rotate(0f, 180f, 0f);
@@ -242,8 +222,4 @@ public class PlayerMovement : MonoBehaviour
 		}
 	}
 
-	public void OnLanding()
-	{
-		animator.SetBool("IsJumping", false);
-	}
 }
