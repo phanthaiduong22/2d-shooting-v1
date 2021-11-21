@@ -19,7 +19,7 @@ public class Boss : MonoBehaviour
 	private int reverse = 1;
 	public float maxLeft;
 	public float maxRight;
-	public float moveSpeed = 0.3f; 
+	float moveSpeed = 0.03f;
 
 
 	// Start is called before the first frame update
