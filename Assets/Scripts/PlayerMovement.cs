@@ -53,9 +53,13 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (transform.position.x >= winningPosition.transform.position.x)
+		if (SceneManager.GetActiveScene().buildIndex == 4 && transform.position.x >= winningPosition.transform.position.x)
 		{
 			LoadWinningScreen();
+		}
+		if (SceneManager.GetActiveScene().buildIndex == 3 && Mathf.Abs(transform.position.x - winningPosition.transform.position.x) <= 2f && Mathf.Abs(transform.position.y - winningPosition.transform.position.y) <= 2f)
+		{
+			LoadScene2();
 		}
 		if (IsWater())
 		{
@@ -187,6 +191,10 @@ public class PlayerMovement : MonoBehaviour
 	void LoadWinningScreen()
 	{
 		SceneManager.LoadScene(2);
+	}
+	void LoadScene2()
+	{
+		SceneManager.LoadScene(4);
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
