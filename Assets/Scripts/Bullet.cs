@@ -5,19 +5,22 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
 
-	public float speed = 20f;
-	public int damage = 40;
+	public float basicSpeed = 20f;
+	public int basicDamage = 40;
 	public Rigidbody2D rb;
 	public GameObject impactEffect;
+	public int buff = 0;
 
-	// Use this for initialization
-	void Start()
+    // Use this for initialization
+    void Start()
 	{
+		float speed = basicSpeed + buff * 5f;
 		rb.velocity = transform.right * speed;
 	}
 
 	void OnTriggerEnter2D(Collider2D hitInfo)
 	{
+		int damage = basicDamage + buff * 20;
 		Boss boss = hitInfo.GetComponent<Boss>();
 		if (boss != null)
 		{
@@ -43,5 +46,10 @@ public class Bullet : MonoBehaviour
 
 		Destroy(gameObject);
 	}
+
+	public void Buff(int n)
+    {
+		buff = n;
+    }
 
 }
