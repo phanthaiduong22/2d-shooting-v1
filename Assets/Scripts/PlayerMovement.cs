@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
 	private bool isGrounded;
 	private Vector3 velocity = Vector3.zero;
 	private bool isShooting = false;
+	private int buff = 0;
 
 
 	void Start()
@@ -49,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
 		audioSource = GetComponent<AudioSource>();
 
 		StartCoroutine("Shoot");
+
+		buff = -1;
+		Buff();
 	}
 	// Update is called once per frame
 	void Update()
@@ -181,6 +185,13 @@ public class PlayerMovement : MonoBehaviour
 		LoadGameOverScreen();
 	}
 
+	public void Buff()
+    {
+		buff++;
+		Bullet bullet = bulletPrefab.GetComponent<Bullet>();
+		bullet.Buff(buff);
+    }
+
 
 	void LoadGameOverScreen()
 	{
@@ -231,7 +242,7 @@ public class PlayerMovement : MonoBehaviour
 		if (isGrounded && jump)
 		{
 			isGrounded = false;
-			rigid.AddForce(new Vector2(0f, 1100f));
+			rigid.AddForce(new Vector2(0f, 1000f));
 			FindObjectOfType<AudioManager>().Play("PlayerJumping");
 		}
 	}

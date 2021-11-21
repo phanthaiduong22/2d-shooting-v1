@@ -47,7 +47,6 @@ public class Boss : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		Debug.Log(fireRate);
 		SlideMove();
 		if (Time.time > nextFire)
 		{
@@ -87,8 +86,6 @@ public class Boss : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D hitInfo)
 	{
-		Debug.Log("Boss touch player");
-		Debug.Log(hitInfo.name);
 		PlayerMovement playerMovement = hitInfo.GetComponent<PlayerMovement>();
 		if (playerMovement != null)
 		{
