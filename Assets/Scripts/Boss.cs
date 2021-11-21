@@ -27,11 +27,27 @@ public class Boss : MonoBehaviour
 	{
 		firePoint.Rotate(0f, 0f, -10f);
 		firePoint1.Rotate(0f, 180f, -10f);
+		switch (GameValues.Difficulty)
+		{
+			case GameValues.Difficulties.Easy:
+				moveSpeed = 0.03f;
+				health = 500;
+				break;
+			case GameValues.Difficulties.Medium:
+				moveSpeed = 0.04f;
+				health = 700;
+				break;
+			case GameValues.Difficulties.Hard:
+				moveSpeed = 0.05f;
+				health = 1000;
+				break;
+		}
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
+		Debug.Log(fireRate);
 		SlideMove();
 		if (Time.time > nextFire)
 		{
@@ -55,11 +71,11 @@ public class Boss : MonoBehaviour
 		if (rotatetimes <= 0)
 		{
 			reverse = -reverse;
-			rotatetimes = 10;
+			rotatetimes = 6;
 		}
-		firePoint.Rotate(0f, 0f, reverse * 15f);
+		firePoint.Rotate(0f, 0f, reverse * 10f);
 		Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-		firePoint1.Rotate(0f, 0f, reverse * 15f);
+		firePoint1.Rotate(0f, 0f, reverse * 10f);
 		Instantiate(bulletPrefab, firePoint1.position, firePoint1.rotation);
 		rotatetimes -= 1;
 	}

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class BossBullet : MonoBehaviour
 {
+	[SerializeField] private LayerMask platformLayerMask;
 
-	public float speed = 20f;
-	public int damage = 40;
+	float speed = 10f;
+	int damage = 20;
 	public Rigidbody2D rb;
 	public GameObject impactEffect;
+	public Transform groundCheck;
 
 	// Use this for initialization
 	void Start()
@@ -29,5 +31,17 @@ public class BossBullet : MonoBehaviour
 		}
 
 	}
+	void FixedUpdate()
+	{
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, .2f, platformLayerMask);
+		for (int i = 0; i < colliders.Length; i++)
+		{
+			if (colliders[i].gameObject != gameObject)
+			{
+				Instantiate(impactEffect, transform.position, transform.rotation);
 
+				Destroy(gameObject);
+			}
+		}
+	}
 }

@@ -172,8 +172,6 @@ public class PlayerMovement : MonoBehaviour
 	public void MoveDependOnSlide(Vector3 slideTransform)
 	{
 		Debug.Log("transform" + slideTransform);
-
-		// transform.position = slideTransform;
 	}
 
 	void Die()

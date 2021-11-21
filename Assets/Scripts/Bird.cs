@@ -11,6 +11,24 @@ public class Bird : MonoBehaviour
 	public int health = 300;
 	public int damage = 40;
 
+	void Start()
+	{
+		switch (GameValues.Difficulty)
+		{
+			case GameValues.Difficulties.Easy:
+				// moveSpeed = 0.03f;
+				health = 300;
+				break;
+			case GameValues.Difficulties.Medium:
+				// moveSpeed = 0.05f;
+				health = 400;
+				break;
+			case GameValues.Difficulties.Hard:
+				// moveSpeed = 0.07f;
+				health = 500;
+				break;
+		}
+	}
 	// Update is called once per frame
 	void Update()
 	{
