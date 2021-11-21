@@ -19,7 +19,7 @@ public class Boss : MonoBehaviour
 	private int reverse = 1;
 	public float maxLeft;
 	public float maxRight;
-	float moveSpeed = 0.03f;
+	float moveSpeed;
 
 
 	// Start is called before the first frame update
@@ -30,22 +30,22 @@ public class Boss : MonoBehaviour
 		switch (GameValues.Difficulty)
 		{
 			case GameValues.Difficulties.Easy:
-				moveSpeed = 0.03f;
+				moveSpeed = 0.05f;
 				health = 500;
 				break;
 			case GameValues.Difficulties.Medium:
-				moveSpeed = 0.04f;
+				moveSpeed = 0.08f;
 				health = 700;
 				break;
 			case GameValues.Difficulties.Hard:
-				moveSpeed = 0.05f;
+				moveSpeed = 0.10f;
 				health = 1000;
 				break;
 		}
 	}
 
 	// Update is called once per frame
-	void Update()
+	void FixedUpdate()
 	{
 		SlideMove();
 		if (Time.time > nextFire)
@@ -82,7 +82,7 @@ public class Boss : MonoBehaviour
 	{
 		Instantiate(deathEffect, transform.position, Quaternion.identity);
 		Destroy(gameObject);
-	}	
+	}
 
 	void OnTriggerEnter2D(Collider2D hitInfo)
 	{

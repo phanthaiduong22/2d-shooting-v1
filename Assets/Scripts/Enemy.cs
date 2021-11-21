@@ -5,9 +5,9 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
 
-	public int health = 300;
-	public int damage = 40;
-	float moveSpeed = 0.03f;
+	int health = 300;
+	int damage = 40;
+	float moveSpeed;
 	public float minLeft = -12;
 	public float minRight = 12;
 	public GameObject deathEffect;
@@ -23,20 +23,20 @@ public class Enemy : MonoBehaviour
 		switch (GameValues.Difficulty)
 		{
 			case GameValues.Difficulties.Easy:
-				moveSpeed = 0.03f;
+				moveSpeed = 0.10f;
 				health = 300;
 				break;
 			case GameValues.Difficulties.Medium:
-				moveSpeed = 0.05f;
+				moveSpeed = 0.15f;
 				health = 400;
 				break;
 			case GameValues.Difficulties.Hard:
-				moveSpeed = 0.06f;
+				moveSpeed = 0.20f;
 				health = 500;
 				break;
 		}
 	}
-	void Update()
+	void FixedUpdate()
 	{
 
 		EnemyMove();
