@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
 				health = 400;
 				break;
 			case GameValues.Difficulties.Hard:
-				moveSpeed = 0.07f;
+				moveSpeed = 0.06f;
 				health = 500;
 				break;
 		}
