@@ -186,11 +186,13 @@ public class PlayerMovement : MonoBehaviour
 	}
 
 	public void Buff()
-    {
+	{
 		buff++;
 		Bullet bullet = bulletPrefab.GetComponent<Bullet>();
+		currentHealth += 15;
+		healthBar.SetHealth(currentHealth);
 		bullet.Buff(buff);
-    }
+	}
 
 
 	void LoadGameOverScreen()
