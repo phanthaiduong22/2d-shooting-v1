@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
 	public GameObject bulletPrefab;
 	public Transform firePoint;
 	public GameObject deathEffect;
+	public GameObject winningPosition;
 	public Transform groundCheck;
 	public HealthBar healthBar;
 	public float moveSpeed = 10f;
@@ -52,6 +53,10 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (transform.position.x >= winningPosition.transform.position.x)
+		{
+			LoadWinningScreen();
+		}
 		if (IsWater())
 		{
 			LoadGameOverScreen();
@@ -178,7 +183,10 @@ public class PlayerMovement : MonoBehaviour
 	void LoadGameOverScreen()
 	{
 		SceneManager.LoadScene(1);
-
+	}
+	void LoadWinningScreen()
+	{
+		SceneManager.LoadScene(2);
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{

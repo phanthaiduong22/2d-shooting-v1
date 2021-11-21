@@ -17,6 +17,9 @@ public class Boss : MonoBehaviour
 
 	private int rotatetimes = 6;
 	private int reverse = 1;
+	public float maxLeft;
+	public float maxRight;
+	public float moveSpeed = 0.3f; 
 
 
 	// Start is called before the first frame update
@@ -29,6 +32,7 @@ public class Boss : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		SlideMove();
 		if (Time.time > nextFire)
 		{
 			if (!bulletPrefab)
@@ -36,6 +40,15 @@ public class Boss : MonoBehaviour
 			nextFire = Time.time + fireRate;
 			Shooting();
 		}
+	}
+
+	void SlideMove()
+	{
+		if (transform.position.x <= maxLeft * 1f || transform.position.x >= maxRight * 1f)
+		{
+			moveSpeed = -moveSpeed;
+		}
+		transform.position = transform.position + new Vector3(moveSpeed, 0f, 0f);
 	}
 	void Shooting()
 	{

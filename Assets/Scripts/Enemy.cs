@@ -20,6 +20,21 @@ public class Enemy : MonoBehaviour
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		spriteRenderer.flipX = true;
+		switch (GameValues.Difficulty)
+		{
+			case GameValues.Difficulties.Easy:
+				moveSpeed = 0.03f;
+				health = 300;
+				break;
+			case GameValues.Difficulties.Medium:
+				moveSpeed = 0.05f;
+				health = 400;
+				break;
+			case GameValues.Difficulties.Hard:
+				moveSpeed = 0.07f;
+				health = 500;
+				break;
+		}
 	}
 	void Update()
 	{
