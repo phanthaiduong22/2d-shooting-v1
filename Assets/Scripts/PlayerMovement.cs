@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
 	public HealthBar healthBar;
 	public float moveSpeed = 10f;
 	public int maxHealth = 100;
-	public int currentHealth;
+	int currentHealth;
 
 	private AudioSource audioSource;
 	private Rigidbody2D rigid;
@@ -64,10 +64,10 @@ public class PlayerMovement : MonoBehaviour
 			isMoving = true;
 		}
 		else
-        {
+		{
 			animator.SetBool("IsRunning", false);
 			isMoving = false;
-        }
+		}
 
 		if (Input.GetKeyDown(KeyCode.UpArrow))
 		{
@@ -78,16 +78,16 @@ public class PlayerMovement : MonoBehaviour
 		if (Input.GetKey(KeyCode.Space))
 		{
 			if (!isShooting)
-            {
+			{
 				animator.SetBool("IsShooting", true);
 				isShooting = true;
-            }
+			}
 		}
 		else
-        {
+		{
 			isShooting = false;
 			animator.SetBool("IsShooting", false);
-        }
+		}
 
 		// Sound moving
 		if (isMoving)
@@ -104,9 +104,9 @@ public class PlayerMovement : MonoBehaviour
 	}
 
 	private IEnumerator Shoot()
-    {
+	{
 		while (true)
-        {
+		{
 			if (isShooting)
 			{
 				Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
@@ -122,23 +122,23 @@ public class PlayerMovement : MonoBehaviour
 	{
 		Move(currentMove * Time.fixedDeltaTime, jump);
 		if (jump)
-        {
+		{
 			jump = false;
 			return;
-        }
+		}
 		jump = false;
 		bool wasGrounded = isGrounded;
 		isGrounded = false;
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, .2f, platformLayerMask);
 		for (int i = 0; i < colliders.Length; i++)
-        {
+		{
 			if (colliders[i].gameObject != gameObject)
-            {
+			{
 				isGrounded = true;
 				if (!wasGrounded)
 					animator.SetBool("IsJumping", false);
-            }
-        }
+			}
+		}
 	}
 
 	private bool IsWater()
@@ -182,12 +182,12 @@ public class PlayerMovement : MonoBehaviour
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-        /*if (IsGrounded())
+		/*if (IsGrounded())
         {
             isJumping = false;
         }*/
 
-    }
+	}
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
@@ -199,7 +199,7 @@ public class PlayerMovement : MonoBehaviour
 	}
 
 	private void Move(float move, bool jump)
-    {
+	{
 		Vector3 targetVelocity = new Vector2(move * moveSpeed, rigid.velocity.y);
 		rigid.velocity = Vector3.SmoothDamp(rigid.velocity, targetVelocity, ref velocity, .05f);
 		if (move > 0 && spriteRenderer.flipX)
