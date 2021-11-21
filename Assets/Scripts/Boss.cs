@@ -83,7 +83,7 @@ public class Boss : MonoBehaviour
 	{
 		Instantiate(deathEffect, transform.position, Quaternion.identity);
 		Destroy(gameObject);
-	}
+	}	
 
 	void OnTriggerEnter2D(Collider2D hitInfo)
 	{
