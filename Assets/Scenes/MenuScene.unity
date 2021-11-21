@@ -674,7 +674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &449094882
 RectTransform:
   m_ObjectHideFlags: 0
@@ -867,11 +867,12 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Fire: Spacebar
 
-    Left:
+    Move Left: ArrowLeft
 
-    Right:
+    Move Right: ArrowRight
 
-    Up:'
+    Jump:
+    ArrowUp'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -905,7 +906,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1681,7 +1682,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1127627400
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3158,7 +3159,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1, y: -88}
+  m_AnchoredPosition: {x: 1, y: -157.1}
   m_SizeDelta: {x: 155.0726, y: 32.4499}
   m_Pivot: {x: 0.53936946, y: 0.37526613}
 --- !u!114 &2085125887
