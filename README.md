@@ -15,3 +15,6 @@ https://youtu.be/1fwLFY9LfhU
 
 ## Release
 ### v1.0.0: https://github.com/phanthaiduong22/2d-shooting-v1/releases/tag/v1.0.0
+
+## Poster
+![alt text](https://github.com/phanthaiduong22/2d-shooting-v1/blob/master/poster.png)
